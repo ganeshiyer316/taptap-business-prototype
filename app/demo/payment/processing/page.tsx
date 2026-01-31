@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import PhoneFrame from '@/components/ui/PhoneFrame';
@@ -8,8 +8,9 @@ import Header from '@/components/layout/Header';
 import PaymentTracker from '@/components/payment/PaymentTracker';
 import { usePaymentStatus } from '@/hooks/usePaymentStatus';
 import { MOCK_SUPPLIERS, MOCK_FX_RATES, MOCK_CORRIDORS } from '@/lib/mock-data';
+import type { PaymentStep } from '@/lib/types';
 
-const createPaymentSteps = (supplier: typeof MOCK_SUPPLIERS[0], rate: number, currency: string) => [
+const createPaymentSteps = (supplier: typeof MOCK_SUPPLIERS[0], rate: number, currency: string): PaymentStep[] => [
   {
     id: 'step_initiated',
     status: 'pending' as const,
@@ -54,7 +55,7 @@ const createPaymentSteps = (supplier: typeof MOCK_SUPPLIERS[0], rate: number, cu
   },
 ];
 
-export default function ProcessingPage() {
+function ProcessingPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const supplierId = searchParams.get('supplierId') || 'sup_001';
@@ -128,5 +129,13 @@ export default function ProcessingPage() {
         </div>
       </div>
     </PhoneFrame>
+  );
+}
+
+export default function ProcessingPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-white" />}>
+      <ProcessingPageContent />
+    </Suspense>
   );
 }

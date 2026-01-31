@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter, useSearchParams } from 'next/navigation';
 import PhoneFrame from '@/components/ui/PhoneFrame';
@@ -11,7 +11,7 @@ import FXDisplay from '@/components/payment/FXDisplay';
 import Input from '@/components/ui/Input';
 import { MOCK_SUPPLIERS, MOCK_FX_RATES, MOCK_CORRIDORS } from '@/lib/mock-data';
 
-export default function AmountPage() {
+function AmountPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const supplierId = searchParams.get('supplierId') || 'sup_001';
@@ -125,5 +125,13 @@ export default function AmountPage() {
         </motion.div>
       </div>
     </PhoneFrame>
+  );
+}
+
+export default function AmountPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-white" />}>
+      <AmountPageContent />
+    </Suspense>
   );
 }

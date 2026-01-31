@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { Check, Download, Share2, MessageCircle, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
@@ -8,7 +9,7 @@ import PhoneFrame from '@/components/ui/PhoneFrame';
 import Button from '@/components/ui/Button';
 import { MOCK_SUPPLIERS, MOCK_FX_RATES, MOCK_CORRIDORS, MOCK_BUSINESS } from '@/lib/mock-data';
 
-export default function PaymentSuccessPage() {
+function PaymentSuccessPageContent() {
   const searchParams = useSearchParams();
   const supplierId = searchParams.get('supplierId') || 'sup_001';
   const amount = parseFloat(searchParams.get('amount') || '257.50');
@@ -153,5 +154,13 @@ export default function PaymentSuccessPage() {
         </motion.div>
       </div>
     </PhoneFrame>
+  );
+}
+
+export default function PaymentSuccessPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-tts-green" />}>
+      <PaymentSuccessPageContent />
+    </Suspense>
   );
 }

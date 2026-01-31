@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { Check, AlertCircle } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -9,7 +9,7 @@ import Header from '@/components/layout/Header';
 import Button from '@/components/ui/Button';
 import { MOCK_SUPPLIERS, MOCK_FX_RATES, MOCK_CORRIDORS, MOCK_BUSINESS } from '@/lib/mock-data';
 
-export default function ReviewPage() {
+function ReviewPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const supplierId = searchParams.get('supplierId') || 'sup_001';
@@ -146,5 +146,13 @@ export default function ReviewPage() {
         </motion.div>
       </div>
     </PhoneFrame>
+  );
+}
+
+export default function ReviewPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-50" />}>
+      <ReviewPageContent />
+    </Suspense>
   );
 }

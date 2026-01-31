@@ -1,13 +1,18 @@
 'use client';
 
-import { ButtonHTMLAttributes, forwardRef } from 'react';
+import { forwardRef } from 'react';
 import { motion } from 'framer-motion';
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps {
+  children: React.ReactNode;
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
   fullWidth?: boolean;
   loading?: boolean;
+  disabled?: boolean;
+  className?: string;
+  onClick?: () => void;
+  type?: 'button' | 'submit' | 'reset';
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -20,7 +25,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       loading = false,
       className = '',
       disabled,
-      ...props
+      onClick,
+      type = 'button',
     },
     ref
   ) => {
@@ -43,7 +49,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <motion.button
         ref={ref}
-        whileTap={{ scale: disabled || loading ? 1 : 0.98 }}
+        type={type}
+        whileTap={disabled || loading ? undefined : { scale: 0.98 }}
         className={`
           ${baseStyles}
           ${variants[variant]}
@@ -52,7 +59,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           ${className}
         `}
         disabled={disabled || loading}
-        {...props}
+        onClick={onClick}
       >
         {loading ? (
           <>
