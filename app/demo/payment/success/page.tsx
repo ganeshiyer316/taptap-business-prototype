@@ -2,7 +2,7 @@
 
 import { Suspense, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, Download, Share2, MessageCircle, ArrowRight, X, Smartphone } from 'lucide-react';
+import { Check, Download, Share2, MessageCircle, ArrowRight, X, Smartphone, Vibrate, Copy, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import PhoneFrame from '@/components/ui/PhoneFrame';
@@ -16,6 +16,7 @@ function PaymentSuccessPageContent() {
   const reference = searchParams.get('reference') || 'INV-2024-001';
 
   const [showSmsToast, setShowSmsToast] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const supplier = MOCK_SUPPLIERS.find((s) => s.id === supplierId) || MOCK_SUPPLIERS[0];
   const corridor = MOCK_CORRIDORS.find((c) => c.code === supplier.countryCode);
@@ -23,7 +24,7 @@ function PaymentSuccessPageContent() {
   const rate = MOCK_FX_RATES[fxKey] || 19.42;
   const convertedAmount = amount * rate;
 
-  const transactionId = `TTS-BUS-${Date.now().toString().slice(-10)}`;
+  const [transactionId] = useState(`TTS-BUS-${Date.now().toString().slice(-10)}`);
   const now = new Date();
   const formattedDate = now.toLocaleDateString('en-GB', {
     day: 'numeric',
@@ -51,6 +52,18 @@ function PaymentSuccessPageContent() {
     };
   }, []);
 
+  const handleCopyTransactionId = async () => {
+    try {
+      await navigator.clipboard.writeText(transactionId);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Fallback for older browsers
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
   return (
     <PhoneFrame>
       {/* SMS Toast Notification */}
@@ -67,9 +80,15 @@ function PaymentSuccessPageContent() {
               <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
                 <Smartphone className="w-4 h-4" />
               </div>
-              <p className="text-sm font-medium flex-1">
-                {supplier.name} has been notified via SMS
-              </p>
+              <div className="flex-1">
+                <p className="text-sm font-medium">
+                  {supplier.name} has been notified via SMS
+                </p>
+                <div className="flex items-center gap-1 mt-0.5">
+                  <Vibrate className="w-3 h-3 text-white/70" />
+                  <span className="text-xs text-white/70">Recipient received notification</span>
+                </div>
+              </div>
               <button
                 onClick={() => setShowSmsToast(false)}
                 className="text-white/70 hover:text-white transition-colors"
@@ -143,9 +162,19 @@ function PaymentSuccessPageContent() {
               <span className="text-gray-500">Reference</span>
               <span className="text-gray-700">{reference || 'None'}</span>
             </div>
-            <div className="flex justify-between text-sm">
+            <div className="flex justify-between items-center text-sm">
               <span className="text-gray-500">Transaction ID</span>
-              <span className="font-mono text-gray-700 text-xs">{transactionId}</span>
+              <button
+                onClick={handleCopyTransactionId}
+                className="flex items-center gap-1.5 font-mono text-gray-700 text-xs hover:text-tts-green transition-colors"
+              >
+                {transactionId}
+                {copied ? (
+                  <Check className="w-3.5 h-3.5 text-green-500" />
+                ) : (
+                  <Copy className="w-3.5 h-3.5" />
+                )}
+              </button>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-gray-500">Date</span>
@@ -191,10 +220,18 @@ function PaymentSuccessPageContent() {
             </Button>
           </Link>
 
+          {/* Repeat Payment to Same Supplier */}
+          <Link href={`/demo/payment/amount?supplierId=${supplierId}`}>
+            <button className="w-full mt-3 py-3 text-tts-green font-medium text-center flex items-center justify-center gap-2">
+              <RefreshCw className="w-4 h-4" />
+              Pay {supplier.name} again
+            </button>
+          </Link>
+
           {/* Make Another Payment */}
           <Link href="/demo/payment/select-supplier">
-            <button className="w-full mt-3 py-3 text-tts-green font-medium text-center">
-              Make another payment
+            <button className="w-full py-2 text-gray-500 text-sm text-center">
+              Pay different supplier
             </button>
           </Link>
         </motion.div>

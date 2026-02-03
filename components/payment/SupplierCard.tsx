@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Star } from 'lucide-react';
 import { Supplier } from '@/lib/types';
 
 interface SupplierCardProps {
@@ -11,12 +11,17 @@ interface SupplierCardProps {
   showArrow?: boolean;
 }
 
+// Threshold for "frequent" supplier (total paid > £5000)
+const FREQUENT_THRESHOLD = 5000;
+
 export default function SupplierCard({
   supplier,
   onClick,
   selected = false,
   showArrow = true,
 }: SupplierCardProps) {
+  const isFrequent = (supplier.totalPaid || 0) >= FREQUENT_THRESHOLD;
+
   return (
     <motion.div
       whileTap={onClick ? { scale: 0.98 } : undefined}
@@ -29,9 +34,16 @@ export default function SupplierCard({
         }
       `}
     >
-      {/* Flag/Avatar */}
-      <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-2xl mr-3 shadow-sm">
-        {supplier.countryFlag}
+      {/* Flag/Avatar with Favorite Star */}
+      <div className="relative">
+        <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-2xl mr-3 shadow-sm">
+          {supplier.countryFlag}
+        </div>
+        {isFrequent && (
+          <div className="absolute -top-1 -right-0 w-5 h-5 bg-yellow-400 rounded-full flex items-center justify-center shadow-sm">
+            <Star className="w-3 h-3 text-white fill-white" />
+          </div>
+        )}
       </div>
 
       {/* Info */}

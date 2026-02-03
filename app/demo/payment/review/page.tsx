@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { motion } from 'framer-motion';
-import { Check, AlertCircle } from 'lucide-react';
+import { Check, AlertCircle, Clock } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import PhoneFrame from '@/components/ui/PhoneFrame';
 import Header from '@/components/layout/Header';
@@ -23,6 +23,18 @@ function ReviewPageContent() {
   const convertedAmount = amount * rate;
 
   const [isProcessing, setIsProcessing] = useState(false);
+  const [rateLockSeconds, setRateLockSeconds] = useState(60);
+
+  // Countdown timer for rate lock
+  useEffect(() => {
+    if (rateLockSeconds <= 0) return;
+
+    const timer = setInterval(() => {
+      setRateLockSeconds((prev) => Math.max(0, prev - 1));
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [rateLockSeconds]);
 
   const handleConfirm = async () => {
     setIsProcessing(true);
@@ -71,7 +83,15 @@ function ReviewPageContent() {
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">Exchange rate</span>
-                <span className="text-gray-700">1 GBP = {rate.toFixed(2)} {corridor?.currency}</span>
+                <div className="text-right">
+                  <span className="text-gray-700">1 GBP = {rate.toFixed(2)} {corridor?.currency}</span>
+                  <div className={`flex items-center justify-end gap-1 mt-0.5 ${rateLockSeconds <= 15 ? 'text-orange-500' : 'text-green-600'}`}>
+                    <Clock className="w-3 h-3" />
+                    <span className="text-xs font-medium">
+                      {rateLockSeconds > 0 ? `Locked for ${rateLockSeconds}s` : 'Rate expired - refresh'}
+                    </span>
+                  </div>
+                </div>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">Fee</span>
