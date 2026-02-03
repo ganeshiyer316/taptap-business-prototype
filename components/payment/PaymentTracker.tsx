@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, Loader2, ChevronDown, ChevronUp } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { PaymentStep } from '@/lib/types';
 
 interface PaymentTrackerProps {
@@ -12,6 +12,14 @@ interface PaymentTrackerProps {
 
 export default function PaymentTracker({ steps, expandable = true }: PaymentTrackerProps) {
   const [expandedStep, setExpandedStep] = useState<string | null>(null);
+
+  // Auto-expand compliance step when it becomes current
+  useEffect(() => {
+    const complianceStep = steps.find(s => s.id === 'step_compliance');
+    if (complianceStep?.status === 'current' && complianceStep.details) {
+      setExpandedStep('step_compliance');
+    }
+  }, [steps]);
 
   const toggleExpand = (stepId: string) => {
     if (expandable) {

@@ -23,11 +23,11 @@ export const ANIMATION_DELAYS = {
 };
 
 export const STEP_DELAYS = [
-  1000,  // Step 1 → 2: 1 second
-  1500,  // Step 2 → 3: 1.5 seconds
-  2000,  // Step 3 → 4: 2 seconds
-  1500,  // Step 4 → 5: 1.5 seconds
-  2000,  // Step 5 → 6: 2 seconds (delivery)
+  3000,  // Step 1 → 2: 3 seconds
+  3500,  // Step 2 → 3: 3.5 seconds
+  4000,  // Step 3 → 4: 4 seconds (Compliance - needs time to read details)
+  3500,  // Step 4 → 5: 3.5 seconds
+  3000,  // Step 5 → 6: 3 seconds (delivery)
 ];
 
 export const LIMITS = {

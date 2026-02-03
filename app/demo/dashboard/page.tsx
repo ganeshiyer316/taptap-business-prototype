@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Send, Plus, ChevronRight, TrendingUp, Check } from 'lucide-react';
+import { Send, Plus, ChevronRight, TrendingUp, Check, Users } from 'lucide-react';
 import Link from 'next/link';
 import PhoneFrame from '@/components/ui/PhoneFrame';
 import Button from '@/components/ui/Button';
@@ -51,7 +51,7 @@ export default function DashboardPage() {
 
         {/* Quick Actions */}
         <div className="px-5 -mt-3 relative z-10">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-3 gap-3">
             <Link href="/demo/payment/select-supplier">
               <motion.div
                 whileTap={{ scale: 0.98 }}
@@ -60,9 +60,22 @@ export default function DashboardPage() {
                 <div className="w-12 h-12 bg-tts-green rounded-xl flex items-center justify-center mb-2">
                   <Send className="w-6 h-6 text-white" />
                 </div>
-                <span className="font-semibold text-gray-900">Pay Supplier</span>
+                <span className="font-semibold text-gray-900 text-sm">Pay Supplier</span>
               </motion.div>
             </Link>
+            <div className="relative">
+              <motion.div
+                className="bg-white rounded-xl p-4 shadow-sm flex flex-col items-center text-center opacity-50 cursor-not-allowed"
+              >
+                <div className="w-12 h-12 bg-gray-200 rounded-xl flex items-center justify-center mb-2">
+                  <Users className="w-6 h-6 text-gray-400" />
+                </div>
+                <span className="font-semibold text-gray-500 text-sm">Run Payroll</span>
+              </motion.div>
+              <span className="absolute -top-2 -right-2 bg-blue-500 text-white text-[10px] font-medium px-2 py-0.5 rounded-full">
+                Coming Soon
+              </span>
+            </div>
             <motion.div
               whileTap={{ scale: 0.98 }}
               className="bg-white rounded-xl p-4 shadow-sm flex flex-col items-center text-center cursor-pointer hover:shadow-md transition-all"
@@ -70,7 +83,7 @@ export default function DashboardPage() {
               <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mb-2">
                 <Plus className="w-6 h-6 text-gray-600" />
               </div>
-              <span className="font-semibold text-gray-900">Add Supplier</span>
+              <span className="font-semibold text-gray-900 text-sm">Add Supplier</span>
             </motion.div>
           </div>
         </div>

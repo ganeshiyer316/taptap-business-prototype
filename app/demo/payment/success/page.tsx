@@ -1,8 +1,8 @@
 'use client';
 
-import { Suspense } from 'react';
-import { motion } from 'framer-motion';
-import { Check, Download, Share2, MessageCircle, ArrowRight } from 'lucide-react';
+import { Suspense, useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Check, Download, Share2, MessageCircle, ArrowRight, X, Smartphone } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import PhoneFrame from '@/components/ui/PhoneFrame';
@@ -14,6 +14,8 @@ function PaymentSuccessPageContent() {
   const supplierId = searchParams.get('supplierId') || 'sup_001';
   const amount = parseFloat(searchParams.get('amount') || '257.50');
   const reference = searchParams.get('reference') || 'INV-2024-001';
+
+  const [showSmsToast, setShowSmsToast] = useState(false);
 
   const supplier = MOCK_SUPPLIERS.find((s) => s.id === supplierId) || MOCK_SUPPLIERS[0];
   const corridor = MOCK_CORRIDORS.find((c) => c.code === supplier.countryCode);
@@ -33,8 +35,52 @@ function PaymentSuccessPageContent() {
     minute: '2-digit',
   });
 
+  // Show SMS toast notification after delay
+  useEffect(() => {
+    const showTimer = setTimeout(() => {
+      setShowSmsToast(true);
+    }, 1500);
+
+    const hideTimer = setTimeout(() => {
+      setShowSmsToast(false);
+    }, 4500); // Show for 3 seconds
+
+    return () => {
+      clearTimeout(showTimer);
+      clearTimeout(hideTimer);
+    };
+  }, []);
+
   return (
     <PhoneFrame>
+      {/* SMS Toast Notification */}
+      <AnimatePresence>
+        {showSmsToast && (
+          <motion.div
+            initial={{ opacity: 0, y: -50, x: '-50%' }}
+            animate={{ opacity: 1, y: 0, x: '-50%' }}
+            exit={{ opacity: 0, y: -50, x: '-50%' }}
+            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+            className="fixed top-4 left-1/2 z-50 w-[calc(100%-2rem)] max-w-[340px]"
+          >
+            <div className="bg-blue-600 text-white rounded-xl px-4 py-3 shadow-lg flex items-center gap-3">
+              <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
+                <Smartphone className="w-4 h-4" />
+              </div>
+              <p className="text-sm font-medium flex-1">
+                {supplier.name} has been notified via SMS
+              </p>
+              <button
+                onClick={() => setShowSmsToast(false)}
+                className="text-white/70 hover:text-white transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="min-h-full bg-gradient-to-b from-tts-green to-tts-green-dark">
         {/* Success Header */}
         <div className="px-5 pt-8 pb-6 text-white text-center">
