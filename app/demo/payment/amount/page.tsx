@@ -9,14 +9,16 @@ import Button from '@/components/ui/Button';
 import AmountInput from '@/components/payment/AmountInput';
 import FXDisplay from '@/components/payment/FXDisplay';
 import Input from '@/components/ui/Input';
-import { MOCK_SUPPLIERS, MOCK_FX_RATES, MOCK_CORRIDORS } from '@/lib/mock-data';
+import { MOCK_FX_RATES, MOCK_CORRIDORS } from '@/lib/mock-data';
+import { useSuppliers } from '@/lib/supplier-context';
 
 function AmountPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { suppliers } = useSuppliers();
   const supplierId = searchParams.get('supplierId') || 'sup_001';
 
-  const supplier = MOCK_SUPPLIERS.find((s) => s.id === supplierId) || MOCK_SUPPLIERS[0];
+  const supplier = suppliers.find((s) => s.id === supplierId) || suppliers[0];
   const corridor = MOCK_CORRIDORS.find((c) => c.code === supplier.countryCode);
   const fxKey = `GBP-${corridor?.currency || 'GHS'}`;
   const rate = MOCK_FX_RATES[fxKey] || 19.42;

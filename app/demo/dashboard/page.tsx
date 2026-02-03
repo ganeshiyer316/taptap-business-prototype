@@ -7,11 +7,12 @@ import PhoneFrame from '@/components/ui/PhoneFrame';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import SupplierCard from '@/components/payment/SupplierCard';
-import { MOCK_BUSINESS, MOCK_SUPPLIERS } from '@/lib/mock-data';
+import { MOCK_BUSINESS } from '@/lib/mock-data';
+import { useSuppliers } from '@/lib/supplier-context';
 
 export default function DashboardPage() {
   const business = MOCK_BUSINESS;
-  const suppliers = MOCK_SUPPLIERS;
+  const { suppliers } = useSuppliers();
   const limitUsedPercent = (business.limits.used / business.limits.monthlyLimit) * 100;
 
   return (

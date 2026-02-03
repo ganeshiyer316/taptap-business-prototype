@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Check, ArrowRight, Send, Shield, UserCheck } from 'lucide-react';
 import Link from 'next/link';
@@ -8,9 +8,12 @@ import { useSearchParams } from 'next/navigation';
 import PhoneFrame from '@/components/ui/PhoneFrame';
 import Button from '@/components/ui/Button';
 import { MOCK_CORRIDORS } from '@/lib/mock-data';
+import { useSuppliers, createSupplierFromParams } from '@/lib/supplier-context';
 
 function SupplierSuccessContent() {
   const searchParams = useSearchParams();
+  const { addSupplier } = useSuppliers();
+  const [supplierId, setSupplierId] = useState<string | null>(null);
 
   const countryCode = searchParams.get('country') || 'GH';
   const supplierName = searchParams.get('name') || 'Supplier';
@@ -19,6 +22,15 @@ function SupplierSuccessContent() {
   const supplierType = searchParams.get('supplierType') || '';
 
   const corridor = MOCK_CORRIDORS.find((c) => c.code === countryCode);
+
+  // Add supplier to context on mount (only once)
+  useEffect(() => {
+    if (!supplierId) {
+      const supplierData = createSupplierFromParams(searchParams);
+      const newId = addSupplier(supplierData);
+      setSupplierId(newId);
+    }
+  }, [searchParams, addSupplier, supplierId]);
 
   return (
     <PhoneFrame>
@@ -131,7 +143,7 @@ function SupplierSuccessContent() {
 
           {/* CTA Buttons */}
           <div className="space-y-3">
-            <Link href="/demo/payment/select-supplier">
+            <Link href={supplierId ? `/demo/payment/amount?supplierId=${supplierId}` : '/demo/payment/select-supplier'}>
               <Button fullWidth size="lg">
                 Pay {supplierName} Now
                 <ArrowRight className="w-5 h-5 ml-2" />

@@ -8,14 +8,15 @@ import Link from 'next/link';
 import PhoneFrame from '@/components/ui/PhoneFrame';
 import Header from '@/components/layout/Header';
 import SupplierCard from '@/components/payment/SupplierCard';
-import { MOCK_SUPPLIERS } from '@/lib/mock-data';
+import { useSuppliers } from '@/lib/supplier-context';
 
 export default function SelectSupplierPage() {
   const router = useRouter();
+  const { suppliers } = useSuppliers();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSupplier, setSelectedSupplier] = useState<string | null>(null);
 
-  const filteredSuppliers = MOCK_SUPPLIERS.filter(
+  const filteredSuppliers = suppliers.filter(
     (s) =>
       s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       s.country.toLowerCase().includes(searchQuery.toLowerCase())

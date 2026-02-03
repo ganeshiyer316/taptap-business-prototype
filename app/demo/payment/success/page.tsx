@@ -7,10 +7,12 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import PhoneFrame from '@/components/ui/PhoneFrame';
 import Button from '@/components/ui/Button';
-import { MOCK_SUPPLIERS, MOCK_FX_RATES, MOCK_CORRIDORS, MOCK_BUSINESS } from '@/lib/mock-data';
+import { MOCK_FX_RATES, MOCK_CORRIDORS, MOCK_BUSINESS } from '@/lib/mock-data';
+import { useSuppliers } from '@/lib/supplier-context';
 
 function PaymentSuccessPageContent() {
   const searchParams = useSearchParams();
+  const { suppliers } = useSuppliers();
   const supplierId = searchParams.get('supplierId') || 'sup_001';
   const amount = parseFloat(searchParams.get('amount') || '257.50');
   const reference = searchParams.get('reference') || 'INV-2024-001';
@@ -18,7 +20,7 @@ function PaymentSuccessPageContent() {
   const [showSmsToast, setShowSmsToast] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const supplier = MOCK_SUPPLIERS.find((s) => s.id === supplierId) || MOCK_SUPPLIERS[0];
+  const supplier = suppliers.find((s) => s.id === supplierId) || suppliers[0];
   const corridor = MOCK_CORRIDORS.find((c) => c.code === supplier.countryCode);
   const fxKey = `GBP-${corridor?.currency || 'GHS'}`;
   const rate = MOCK_FX_RATES[fxKey] || 19.42;
