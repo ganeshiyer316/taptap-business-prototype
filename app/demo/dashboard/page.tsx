@@ -76,15 +76,17 @@ export default function DashboardPage() {
                 Coming Soon
               </span>
             </div>
-            <motion.div
-              whileTap={{ scale: 0.98 }}
-              className="bg-white rounded-xl p-4 shadow-sm flex flex-col items-center text-center cursor-pointer hover:shadow-md transition-all"
-            >
-              <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mb-2">
-                <Plus className="w-6 h-6 text-gray-600" />
-              </div>
-              <span className="font-semibold text-gray-900 text-sm">Add Supplier</span>
-            </motion.div>
+            <Link href="/demo/supplier/add">
+              <motion.div
+                whileTap={{ scale: 0.98 }}
+                className="bg-white rounded-xl p-4 shadow-sm flex flex-col items-center text-center cursor-pointer hover:shadow-md transition-all"
+              >
+                <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mb-2">
+                  <Plus className="w-6 h-6 text-gray-600" />
+                </div>
+                <span className="font-semibold text-gray-900 text-sm">Add Supplier</span>
+              </motion.div>
+            </Link>
           </div>
         </div>
 

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import PhoneFrame from '@/components/ui/PhoneFrame';
 import Header from '@/components/layout/Header';
 import SupplierCard from '@/components/payment/SupplierCard';
@@ -58,15 +59,17 @@ export default function SelectSupplierPage() {
             transition={{ delay: 0.1 }}
             className="mb-6"
           >
-            <div className="flex items-center gap-4 p-4 bg-tts-green-light rounded-xl cursor-pointer hover:bg-green-100 transition-all border-2 border-dashed border-tts-green">
-              <div className="w-12 h-12 bg-tts-green rounded-xl flex items-center justify-center">
-                <Plus className="w-6 h-6 text-white" />
+            <Link href="/demo/supplier/add">
+              <div className="flex items-center gap-4 p-4 bg-tts-green-light rounded-xl cursor-pointer hover:bg-green-100 transition-all border-2 border-dashed border-tts-green">
+                <div className="w-12 h-12 bg-tts-green rounded-xl flex items-center justify-center">
+                  <Plus className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <p className="font-semibold text-tts-green-dark">Add New Supplier</p>
+                  <p className="text-sm text-gray-500">Pay someone new</p>
+                </div>
               </div>
-              <div>
-                <p className="font-semibold text-tts-green-dark">Add New Supplier</p>
-                <p className="text-sm text-gray-500">Pay someone new</p>
-              </div>
-            </div>
+            </Link>
           </motion.div>
 
           {/* Saved Suppliers */}
